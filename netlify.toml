@@ -1,0 +1,17 @@
+# Netlify picks up the Next.js runtime automatically; this file pins the pieces
+# that are easy to get wrong — Node version and the publish directory.
+#
+# The runtime maps server components, route handlers, revalidation and
+# next/image onto Netlify Functions and the Netlify Image CDN, so no source
+# changes are needed.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 requires Node 20.9+; 22 is the current LTS.
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

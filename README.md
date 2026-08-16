@@ -191,13 +191,25 @@ request — a static file host cannot serve any of that. **GitHub Pages will not
 work**: with no static site in the repository it falls back to Jekyll and renders
 this README instead.
 
-Vercel runs it zero-config:
+Three hosts are wired up. All of them build from `main` on push.
 
-1. <https://vercel.com/new> → sign in with GitHub → import this repository.
-2. Leave every build setting untouched — the framework preset is detected.
-3. Optional: add `RAWG_API_KEY` under **Environment Variables**. Without it the
-   Steam provider takes over, exactly as it does locally.
-4. Deploy.
+**Vercel** — zero config. <https://vercel.com/new> → import the repository →
+deploy. Nothing to change; the framework preset is detected.
+
+**Netlify** — [`netlify.toml`](netlify.toml) pins Node 22 and the official
+Next.js runtime, which maps server components, route handlers, revalidation and
+`next/image` onto Netlify Functions and its image CDN.
+<https://app.netlify.com/start> → import the repository → deploy.
+
+**Render** — [`render.yaml`](render.yaml) runs plain `next start` in a Node
+service with no platform adapter in between, so behaviour matches local
+exactly. <https://dashboard.render.com/blueprints> → **New Blueprint Instance**
+→ pick the repository. Free instances sleep when idle, so the first request
+after a quiet spell pays a cold start.
+
+On any of them, `RAWG_API_KEY` is optional: set it to switch the catalogue to
+RAWG, leave it unset and the Steam provider takes over exactly as it does
+locally.
 
 Notes for a hosted deployment:
 

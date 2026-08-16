@@ -1,0 +1,23 @@
+# Render blueprint: plain Node running `next start`, with no platform adapter
+# in between. That makes it the most faithful host for this app — ISR, the
+# route handler and the image optimizer behave exactly as they do locally.
+#
+# Trade-off: free instances sleep after inactivity, so the first request after
+# a quiet period waits for a cold start.
+
+services:
+  - type: web
+    name: volta
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start -- --port $PORT --hostname 0.0.0.0
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Optional: set in the dashboard to switch the catalogue to RAWG.
+      - key: RAWG_API_KEY
+        sync: false
