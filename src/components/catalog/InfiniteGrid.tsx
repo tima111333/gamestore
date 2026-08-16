@@ -57,6 +57,16 @@ export function InfiniteGrid({
       if (!response.ok) throw new Error(`HTTP ${response.status}`)
       const data = (await response.json()) as CatalogPage
 
+      // Stop unless the response actually moved the cursor forward. Without
+      // this guard a server or CDN that ignores `page` returns the same slice
+      // forever: the ids de-duplicate away, the grid never grows, the sentinel
+      // stays in view and the observer keeps firing — an endless request loop.
+      const advanced = data.page === next && data.games.length > 0
+      if (!advanced) {
+        setHasMore(false)
+        return
+      }
+
       setExtraPages((pages) => [...pages, data.games])
       setPage(data.page)
       setHasMore(data.hasMore)

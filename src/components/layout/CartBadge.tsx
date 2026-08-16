@@ -2,11 +2,11 @@
 
 import Link from 'next/link'
 import { m } from 'framer-motion'
-import { useCart, cartCount } from '@/store/cart'
+import { useCart, useCartHydrated, cartCount } from '@/store/cart'
 
 export function CartBadge() {
   const items = useCart((state) => state.items)
-  const hydrated = useCart((state) => state.hydrated)
+  const hydrated = useCartHydrated()
   const count = hydrated ? cartCount(items) : 0
 
   return (

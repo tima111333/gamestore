@@ -1,5 +1,6 @@
 'use client'
 
+import { useSyncExternalStore } from 'react'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import type { Game } from '@/types/game'
@@ -19,8 +20,6 @@ export interface CartItem {
 
 interface CartState {
   items: CartItem[]
-  /** False until persisted state is read, so SSR and first paint agree. */
-  hydrated: boolean
   add: (game: Game) => void
   remove: (id: number) => void
   setQuantity: (id: number, quantity: number) => void
@@ -33,7 +32,6 @@ export const useCart = create<CartState>()(
   persist<CartState, [], [], PersistedCart>(
     (set) => ({
       items: [],
-      hydrated: false,
 
       add: (game) =>
         set((state) => {
@@ -78,14 +76,27 @@ export const useCart = create<CartState>()(
       name: 'volta-cart',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ items: state.items }),
-      // Runs after localStorage is read (empty storage included), which is the
-      // signal client-only UI waits for before rendering counts and totals.
-      onRehydrateStorage: () => () => {
-        useCart.setState({ hydrated: true })
-      },
     },
   ),
 )
+
+/**
+ * True once persisted state has been read.
+ *
+ * Client-only UI (counts, totals) must not render during the hydration pass or
+ * the markup will not match the server's. This reads the persist middleware's
+ * own status rather than a flag set from `onRehydrateStorage`: localStorage is
+ * synchronous, so that callback fires while this module is still initialising
+ * and `useCart` is not assigned yet — the flag silently never flipped, which
+ * left the badge on zero and the cart page on its empty state even though the
+ * item was written to storage.
+ */
+export const useCartHydrated = (): boolean =>
+  useSyncExternalStore(
+    (onChange) => useCart.persist.onFinishHydration(onChange),
+    () => useCart.persist.hasHydrated(),
+    () => false,
+  )
 
 export const cartCount = (items: CartItem[]): number =>
   items.reduce((total, item) => total + item.quantity, 0)

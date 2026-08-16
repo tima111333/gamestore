@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useCart, cartCount, cartSavings, cartSubtotal } from '@/store/cart'
+import { useCart, useCartHydrated, cartCount, cartSavings, cartSubtotal } from '@/store/cart'
 import { Button, ButtonLink } from '@/components/ui/Button'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { AnimatedNumber } from '@/components/motion/AnimatedNumber'
@@ -10,7 +10,7 @@ import { formatPrice } from '@/lib/utils'
 
 export function CartView() {
   const items = useCart((state) => state.items)
-  const hydrated = useCart((state) => state.hydrated)
+  const hydrated = useCartHydrated()
   const setQuantity = useCart((state) => state.setQuantity)
   const remove = useCart((state) => state.remove)
   const clear = useCart((state) => state.clear)
