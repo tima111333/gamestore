@@ -99,7 +99,9 @@ export function GameCard({
           {game.genres.slice(0, 2).join(' · ')}
         </p>
 
-        <div className="mt-auto flex items-center justify-between gap-2 pt-1">
+        {/* Two cards fit in 360px, which leaves ~160px per card — price and
+            button only share a line once there is room for both. */}
+        <div className="mt-auto flex flex-col items-start gap-2 pt-1 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
           <PriceTag price={game.price} discount={game.discount} size="sm" />
           <AddToCartButton game={game} className="relative z-30" />
         </div>

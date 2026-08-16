@@ -41,7 +41,9 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-fg-muted transition-colors hover:text-acid-text"
+                    // `py-1` lifts the hit area to 28px — a bare 20px line box
+                    // is under the 24px minimum target size.
+                    className="inline-block py-1 text-sm text-fg-muted transition-colors hover:text-acid-text"
                     {...(link.href.startsWith('http')
                       ? { target: '_blank', rel: 'noreferrer noopener' }
                       : {})}

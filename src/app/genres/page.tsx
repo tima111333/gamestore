@@ -79,7 +79,7 @@ export default async function GenresPage() {
 
                 <Link
                   href={`/catalog?genre=${encodeURIComponent(rail.match[0])}`}
-                  className="group inline-flex shrink-0 items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-fg transition-colors hover:text-acid-text"
+                  className="group inline-flex shrink-0 items-center gap-3 py-2 font-mono text-xs uppercase tracking-[0.2em] text-fg transition-colors hover:text-acid-text"
                 >
                   Open in catalog
                   <span className="transition-transform duration-300 group-hover:translate-x-1">

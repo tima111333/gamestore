@@ -28,9 +28,12 @@ const vertexShader = /* glsl */ `
     p += normal * wave * (1.0 + uPointer * 0.8);
 
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
-    gl_PointSize = (1.6 + max(wave, 0.0) * 9.0) * (260.0 / -mv.z);
+    // Perspective falloff only — the multiplier has to stay small. At camera
+    // z=6 a factor of 260 rendered ~69px points, and thousands of those under
+    // additive blending burn out to a solid white mass.
+    gl_PointSize = (1.1 + max(wave, 0.0) * 5.0) * (11.0 / -mv.z);
     gl_Position = projectionMatrix * mv;
-    vGlow = 0.25 + wave * 3.2;
+    vGlow = 0.18 + wave * 2.4;
   }
 `
 
@@ -43,7 +46,8 @@ const fragmentShader = /* glsl */ `
     vec2 offset = gl_PointCoord - 0.5;
     if (dot(offset, offset) > 0.25) discard;
     vec3 color = mix(uColor, uAccent, clamp(vGlow, 0.0, 1.0));
-    gl_FragColor = vec4(color, clamp(vGlow, 0.05, 0.9));
+    // Capped low: additive blending accumulates wherever points overlap.
+    gl_FragColor = vec4(color, clamp(vGlow, 0.03, 0.38));
   }
 `
 
@@ -53,7 +57,7 @@ function PointSphere() {
   const pointer = useRef({ x: 0, y: 0 })
   const { viewport } = useThree()
 
-  const geometry = useMemo(() => new THREE.SphereGeometry(1.7, 96, 96), [])
+  const geometry = useMemo(() => new THREE.SphereGeometry(1.5, 72, 72), [])
 
   const uniforms = useMemo(
     () => ({

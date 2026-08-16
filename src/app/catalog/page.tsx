@@ -35,8 +35,8 @@ export default async function CatalogPage({
         <span className="kicker">Catalog</span>
         <h1 className="text-5xl sm:text-6xl lg:text-7xl">Everything we stock</h1>
         <p className="max-w-xl text-sm leading-relaxed text-fg-muted sm:text-base">
-          Eighteen titles, no filler. Filters live in the URL — copy the address and the exact view
-          travels with it.
+          {games.length} titles, no filler. Filters live in the URL — copy the address and the exact
+          view travels with it.
         </p>
       </header>
 

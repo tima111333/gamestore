@@ -140,10 +140,12 @@ Measured with Lighthouse against `next start` on the production build:
 
 | | Performance | Accessibility | Best practices | SEO |
 | --- | --- | --- | --- | --- |
-| Desktop | **99** | **100** | 77 | **100** |
+| Desktop | **98** | **100** | 77 | **100** |
 | Mobile | **86** | **100** | 77 | **100** |
 
-Desktop: LCP 1.0 s, TBT 50 ms, **CLS 0**. Mobile: FCP 0.9 s, TBT 30 ms, **CLS 0**; simulated LCP 4.2 s against an observed 418 ms — the gap is Lighthouse's slow-4G/4×-CPU model applied to hydration cost, not a network wait.
+Desktop: LCP 1.0 s, TBT 90 ms, **CLS 0**. Mobile: FCP 0.9 s, TBT 60 ms, Speed Index 1.0 s, **CLS 0**.
+
+Mobile LCP reads 4.3 s, but the observed value in the same trace is **437 ms** — the difference is Lighthouse's simulated slow-4G/4×-CPU model applied to hydration cost, not a resource the page is waiting on. Nothing in the run finishes later than 1.2 s.
 
 ### Bundle
 
@@ -173,7 +175,11 @@ The framework accounts for roughly 160 KB of the first load; that is the floor. 
 
 ## Accessibility
 
-Semantic landmarks, skip link, visible focus ring on every interactive element, full keyboard navigation, `alt` text on meaningful images and `aria-hidden` on decorative ones. Colour tokens are AA against their surfaces (smallest text: 4.98:1). Lighthouse accessibility: 100.
+Semantic landmarks, skip link, visible focus ring on every interactive element, full keyboard navigation, `alt` text on meaningful images and `aria-hidden` on decorative ones. Colour tokens are AA against their surfaces (smallest text: 4.98:1). Lighthouse accessibility: 100 on both the home and catalogue routes.
+
+Overlays behave like real dialogs: the filters drawer moves focus inside on open, keeps Tab within it, closes on Escape, and returns focus to the trigger ([`useFocusTrap`](src/hooks/useFocusTrap.ts)). Interactive targets clear 24×24 px.
+
+Verified by driving headless Chrome: a Tab walk across routes (focus ring present at every stop, no off-screen traps), an accessibility-tree name check, and a layout sweep at 360 / 768 / 1280 / 1920 px with zero horizontal overflow.
 
 ---
 

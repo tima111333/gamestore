@@ -33,7 +33,7 @@ export function CartView() {
       <div className="flex flex-col items-start gap-6 border border-dashed border-line-strong px-6 py-20">
         <p className="font-display text-5xl uppercase">Cart is empty</p>
         <p className="max-w-md text-sm leading-relaxed text-fg-muted">
-          Nothing queued yet. The catalogue is eighteen games deep and most of them are on sale.
+          Nothing queued yet. Most of the catalogue is on sale right now.
         </p>
         <ButtonLink href="/catalog" size="lg">
           Browse catalog

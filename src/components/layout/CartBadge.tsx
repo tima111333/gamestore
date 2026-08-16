@@ -33,7 +33,9 @@ export function CartBadge() {
         animate={{ scale: 1 }}
         transition={{ type: 'spring', stiffness: 420, damping: 14 }}
         className="flex h-5 min-w-5 items-center justify-center bg-acid px-1 font-mono text-[0.625rem] font-bold text-on-accent"
-        aria-hidden={count === 0}
+        // Always hidden from assistive tech: the sr-only sentence below is the
+        // accessible count, and reading both produced "Cart 0 0 items in cart".
+        aria-hidden="true"
       >
         {count}
       </m.span>

@@ -204,13 +204,22 @@
     background: linear-gradient(90deg, var(--line-strong), transparent);
   }
 
-  /* Range input restyled to match the chip language. */
+  /*
+    Range input restyled to match the chip language. The control itself is 24px
+    tall so it meets the minimum target size; the visible track is drawn 2px
+    thin inside it, which is a paint concern rather than a hit-area one.
+  */
   .range-acid {
     -webkit-appearance: none;
     appearance: none;
+    height: 24px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .range-acid::-webkit-slider-runnable-track {
     height: 2px;
     background: var(--line-strong);
-    cursor: pointer;
   }
 
   .range-acid::-webkit-slider-thumb {
@@ -218,9 +227,16 @@
     appearance: none;
     width: 14px;
     height: 14px;
+    /* Centres the thumb on a 2px track. */
+    margin-top: -6px;
     background: var(--acid);
     border: 0;
     cursor: grab;
+  }
+
+  .range-acid::-moz-range-track {
+    height: 2px;
+    background: var(--line-strong);
   }
 
   .range-acid::-moz-range-thumb {
@@ -297,6 +313,25 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/*
+  Phone hero backdrop. The landscape footage crops to a near-black sliver at
+  portrait ratios (measured mean luminance: 10/255), so on small screens the
+  hero is lit deliberately instead of relying on the photograph.
+*/
+.hero-glow {
+  background:
+    radial-gradient(
+      95% 45% at 8% 28%,
+      color-mix(in srgb, var(--acid) 26%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(
+      80% 40% at 95% 76%,
+      color-mix(in srgb, var(--hot) 22%, transparent),
+      transparent 70%
+    );
 }
 
 /* Hero scroll cue: a light travelling down the hairline. */

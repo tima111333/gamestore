@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import type { CatalogFilters, CatalogPage } from '@/types/game'
 import { DEFAULT_FILTERS, SORT_OPTIONS, countActiveFilters, serializeFilters } from '@/lib/filters'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { FiltersPanel } from '@/components/catalog/FiltersPanel'
 import { InfiniteGrid } from '@/components/catalog/InfiniteGrid'
 import { AnimatedNumber } from '@/components/motion/AnimatedNumber'
@@ -28,6 +29,9 @@ export function CatalogView({ initial, filters: serverFilters, genres }: Props) 
   const debouncedSearch = useDebouncedValue(searchInput, 350)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [pending, startTransition] = useTransition()
+
+  const closeDrawer = useCallback(() => setDrawerOpen(false), [])
+  const drawerRef = useFocusTrap<HTMLDivElement>(drawerOpen, closeDrawer)
 
   const filters = useMemo<CatalogFilters>(
     () => ({ ...draft, search: debouncedSearch }),
@@ -95,7 +99,10 @@ export function CatalogView({ initial, filters: serverFilters, genres }: Props) 
             />
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* `min-w-0` on the select: a flex item will not shrink below its
+              content by default, and the longest option pushed this row 40px
+              past a 360px viewport. */}
+          <div className="flex flex-wrap items-center gap-3">
             <label htmlFor="catalog-sort" className="kicker shrink-0">
               Sort
             </label>
@@ -103,7 +110,7 @@ export function CatalogView({ initial, filters: serverFilters, genres }: Props) 
               id="catalog-sort"
               value={filters.sort}
               onChange={(event) => patch({ sort: event.target.value as CatalogFilters['sort'] })}
-              className="h-12 border border-line bg-surface px-3 font-mono text-xs uppercase tracking-[0.14em] text-fg focus:border-acid focus:outline-none"
+              className="h-12 min-w-0 flex-1 border border-line bg-surface px-3 font-mono text-xs uppercase tracking-[0.14em] text-fg focus:border-acid focus:outline-none sm:flex-none"
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -139,6 +146,7 @@ export function CatalogView({ initial, filters: serverFilters, genres }: Props) 
 
       {drawerOpen && (
         <div
+          ref={drawerRef}
           className="fixed inset-0 z-[70] lg:hidden"
           role="dialog"
           aria-modal="true"
@@ -147,7 +155,7 @@ export function CatalogView({ initial, filters: serverFilters, genres }: Props) 
           <button
             type="button"
             className="absolute inset-0 bg-void/80 backdrop-blur-sm"
-            onClick={() => setDrawerOpen(false)}
+            onClick={closeDrawer}
             aria-label="Close filters"
           />
           <div className="absolute inset-y-0 right-0 w-[min(88vw,340px)] overflow-y-auto border-l border-line bg-void p-6">
@@ -167,8 +175,7 @@ function EmptyState({ onReset }: { onReset: () => void }) {
     <div className="flex flex-col items-center gap-4 border border-dashed border-line-strong px-6 py-20 text-center">
       <p className="font-display text-4xl uppercase text-fg">Nothing matches</p>
       <p className="max-w-sm text-sm text-fg-muted">
-        No titles fit that combination. Loosen a filter or clear them all — the catalogue is only
-        eighteen games deep.
+        No titles fit that combination. Loosen a filter, or clear them all and start over.
       </p>
       <Button variant="outline" onClick={onReset}>
         Clear filters

@@ -34,7 +34,7 @@ export function SectionHeader({
         {href && (
           <Link
             href={href}
-            className="group hidden shrink-0 items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-fg-muted transition-colors hover:text-acid-text sm:flex"
+            className="group hidden shrink-0 items-center gap-2 py-2 font-mono text-xs uppercase tracking-[0.2em] text-fg-muted transition-colors hover:text-acid-text sm:flex"
           >
             {cta}
             <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>

@@ -17,10 +17,13 @@ export function Hero({ spotlight, catalogueSize }: { spotlight: Game; catalogueS
         {/* Scaled up so the parallax travel never exposes an edge. */}
         <HeroVideo clip={HERO_CLIP} className="absolute inset-0 scale-110" />
         {/* Legibility scrim — three stops keep the headline readable over any frame. */}
+        {/* Lighter on phones: there is no video there, so the poster is the
+            only thing carrying the hero and a desktop-weight scrim erases it. */}
         <div
-          className="absolute inset-0 bg-gradient-to-t from-void via-void/88 to-void/70"
+          className="absolute inset-0 bg-gradient-to-t from-void via-void/72 to-void/50 md:via-void/88 md:to-void/70"
           aria-hidden="true"
         />
+        <div className="hero-glow absolute inset-0 md:hidden" aria-hidden="true" />
         <div
           className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_120%,transparent,var(--void))]"
           aria-hidden="true"
