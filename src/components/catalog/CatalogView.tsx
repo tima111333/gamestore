@@ -73,7 +73,12 @@ export function CatalogView({ initial, filters: serverFilters, genres }: Props) 
   return (
     <div className="grid gap-8 lg:grid-cols-[260px_1fr] lg:gap-12">
       <aside className="hidden lg:block">
-        <div className="sticky top-28">{panel}</div>
+        {/* The panel is taller than the viewport, so a bare `sticky` still let
+            it scroll away and slide under the translucent header. Capping the
+            height keeps it pinned and moves the overflow inside. */}
+        <div className="sticky top-28 max-h-[calc(100dvh-9rem)] overflow-y-auto pr-2 [scrollbar-width:thin]">
+          {panel}
+        </div>
       </aside>
 
       <div className="flex flex-col gap-6">
