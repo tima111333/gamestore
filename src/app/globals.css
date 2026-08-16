@@ -177,14 +177,13 @@
   }
 
   /*
-    The header keeps the blur but is nearly opaque. At 72% the catalogue filter
-    rail — which legitimately slides up past the end of its container at the
-    bottom of the page — read straight through it as clipped, floating labels.
+    Solid once scrolled. Any translucency let the catalogue filter rail — which
+    legitimately slides past the end of its container near the bottom of the
+    page — read through as clipped, floating labels. Opaque also means no
+    backdrop-filter, so the header stops being a compositing layer.
   */
   .header-glass {
-    background: color-mix(in srgb, var(--void) 93%, transparent);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    background: var(--void);
     border-color: var(--glass-line);
   }
 
