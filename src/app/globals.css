@@ -1,26 +1,469 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+/*
+  VOLTA — "Acid Arcade" design system.
+  Near-black base, one acid accent, one hot accent, hard edges, heavy display type.
+  Dark is the default; `.light` on <html> swaps the token values, so components
+  never need per-theme variants.
+*/
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  --void: #030304;
+  --surface: #08090b;
+  --surface-2: #0e1013;
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.2);
+
+  --fg: #f2f2f0;
+  /* Both muted tones clear 4.5:1 against --void, so 11px mono labels stay AA. */
+  --fg-muted: #9ba0a8;
+  --fg-faint: #787d85;
+
+  --acid: #ccff00;
+  --acid-soft: #e4ff7a;
+  /* Accent text tuned per theme so contrast stays AA on the current surface. */
+  --acid-text: #ccff00;
+  --hot: #ff2e88;
+  --hot-text: #ff5c9f;
+  /* Text that sits on top of an acid/hot fill. */
+  --on-accent: #08080a;
+
+  --glass: rgb(6 7 9 / 0.72);
+  --glass-line: rgb(255 255 255 / 0.09);
+  --shadow-glow: 0 0 0 1px rgb(204 255 0 / 0.35), 0 0 32px -8px rgb(204 255 0 / 0.45);
+
+  /* Artwork is the brightest thing on the page; hold it back at rest so the
+     near-black surfaces stay the dominant tone. */
+  --art-dim: 0.28;
+
+  --grain-opacity: 0.05;
+  --scanline-opacity: 0.06;
+}
+
+.light {
+  color-scheme: light;
+
+  --void: #f2f2ee;
+  --surface: #ffffff;
+  --surface-2: #e9e9e3;
+  --line: rgb(8 8 10 / 0.12);
+  --line-strong: rgb(8 8 10 / 0.28);
+
+  --fg: #101014;
+  --fg-muted: #55585f;
+  --fg-faint: #63676e;
+
+  --acid: #b8e600;
+  --acid-soft: #6b8500;
+  --acid-text: #3d5200;
+  --hot: #e0006b;
+  --hot-text: #c2005e;
+  --on-accent: #08080a;
+
+  --glass: rgb(255 255 255 / 0.72);
+  --glass-line: rgb(8 8 10 / 0.1);
+  --shadow-glow: 0 0 0 1px rgb(107 133 0 / 0.4), 0 0 28px -10px rgb(107 133 0 / 0.5);
+
+  --art-dim: 0.06;
+
+  --grain-opacity: 0.03;
+  --scanline-opacity: 0.03;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-void: var(--void);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-acid: var(--acid);
+  --color-acid-soft: var(--acid-soft);
+  --color-acid-text: var(--acid-text);
+  --color-hot: var(--hot);
+  --color-hot-text: var(--hot-text);
+  --color-on-accent: var(--on-accent);
+
+  --font-display: var(--font-anton), 'Arial Narrow', sans-serif;
+  --font-sans: var(--font-chakra), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--void);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv01';
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+
+  ::selection {
+    background: var(--acid);
+    color: var(--on-accent);
+  }
+
+  /* One visible, high-contrast focus treatment for every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--acid);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--void);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--surface-2);
+    border: 2px solid var(--void);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--acid);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Frosted panel used for headers, filter rails and cards. */
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid var(--glass-line);
+  }
+
+  /* Signature notched corner — the house shape of the whole UI. */
+  .notch {
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  }
+
+  .notch-sm {
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+
+  /*
+    Keeps key art from lighting up the page. Pure opacity so hovering a card
+    never costs a paint of the image itself.
+  */
+  .art-scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--void);
+    opacity: var(--art-dim);
+    transition: opacity 400ms var(--ease-out-expo);
+  }
+
+  .group:hover .art-scrim,
+  .group:focus-within .art-scrim {
+    opacity: 0;
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, var(--line-strong), transparent);
+  }
+
+  /* Range input restyled to match the chip language. */
+  .range-acid {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 2px;
+    background: var(--line-strong);
+    cursor: pointer;
+  }
+
+  .range-acid::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--acid);
+    border: 0;
+    cursor: grab;
+  }
+
+  .range-acid::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: var(--acid);
+    border: 0;
+    border-radius: 0;
+    cursor: grab;
+  }
+
+  /* Skeleton shimmer: a translated gradient, so it never triggers layout. */
+  .skeleton-sheen {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--fg) 8%, transparent),
+      transparent
+    );
+    will-change: transform;
+    animation: sheen 1.4s linear infinite;
+  }
+}
+
+/*
+  Headline characters rise into their mask. `both` holds the start frame during
+  the per-character delay, and the animation begins at first paint rather than
+  after hydration — which is what keeps the hero out of the LCP critical path.
+*/
+.split-char {
+  animation: split-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes split-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/*
+  Above-the-fold entrances.
+
+  These run on CSS alone so they start at first paint instead of waiting for
+  hydration — a JS-gated `opacity: 0` on hero content pushed LCP past 4s on a
+  throttled phone. `.rise` deliberately animates transform only: the element is
+  opaque from the first frame, so it counts as painted while it is still moving.
+*/
+.rise {
+  animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.fade-rise {
+  animation: fade-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(18px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero scroll cue: a light travelling down the hairline. */
+.scroll-cue {
+  will-change: transform;
+  animation: cue 2.2s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+}
+
+@keyframes cue {
+  0% {
+    transform: translateY(-100%);
+  }
+  60%,
+  100% {
+    transform: translateY(250%);
+  }
+}
+
+@keyframes sheen {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@utility text-glow {
+  text-shadow: 0 0 24px rgb(204 255 0 / 0.35);
+}
+
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+/*
+  Custom cursor. Both layers are fixed at the origin and moved with transforms
+  only; the native cursor is hidden only once the component confirms a fine
+  pointer, so touch and keyboard users keep the real one.
+*/
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--acid);
+  transition: opacity 200ms linear;
+}
+
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1px solid var(--acid);
+  transition:
+    opacity 200ms linear,
+    width 260ms var(--ease-out-expo),
+    height 260ms var(--ease-out-expo),
+    margin 260ms var(--ease-out-expo),
+    background-color 260ms var(--ease-out-expo);
+}
+
+.cursor-ring[data-active='true'] {
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  background: color-mix(in srgb, var(--acid) 12%, transparent);
+}
+
+.cursor-ring[data-pressed='true'] {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+}
+
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+/* Film grain + CRT scanlines, painted once at the document level. */
+.texture-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.texture-overlay::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  will-change: transform;
+  animation: grain 8s steps(6) infinite;
+}
+
+.texture-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: var(--scanline-opacity);
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 2px,
+    rgb(0 0 0 / 0.6) 2px 3px
+  );
+}
+
+@keyframes grain {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  20% {
+    transform: translate3d(-3%, 2%, 0);
+  }
+  40% {
+    transform: translate3d(2%, -3%, 0);
+  }
+  60% {
+    transform: translate3d(-2%, -2%, 0);
+  }
+  80% {
+    transform: translate3d(3%, 1%, 0);
+  }
+}
+
+/* Lenis owns the scroll position; these are its required host styles. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    /* Staggered delays would otherwise keep characters hidden for ~0.5s. */
+    animation-delay: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .texture-overlay::before {
+    animation: none;
+  }
 }

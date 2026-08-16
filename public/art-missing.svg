@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" width="600" height="900" role="img" aria-label="Artwork unavailable">
+  <rect width="600" height="900" fill="#0e1013"/>
+  <path d="M0 0h600v900H0z" fill="none" stroke="#ffffff14" stroke-width="2"/>
+  <path d="M300 380l40 70h-80z" fill="#ccff00" opacity=".5"/>
+  <text x="300" y="520" font-family="monospace" font-size="26" letter-spacing="6" fill="#787d85" text-anchor="middle">NO ART</text>
+</svg>
