@@ -114,7 +114,10 @@
     color: var(--fg);
     font-family: var(--font-sans);
     font-feature-settings: 'ss01', 'cv01';
-    overflow-x: hidden;
+    /* `clip`, not `hidden`: `overflow-x: hidden` turns the body into a scroll
+       container, and `position: sticky` then anchors to it instead of to the
+       viewport — which let the catalogue filter rail drift under the header. */
+    overflow-x: clip;
   }
 
   h1,
@@ -171,6 +174,18 @@
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     border: 1px solid var(--glass-line);
+  }
+
+  /*
+    The header keeps the blur but is nearly opaque. At 72% the catalogue filter
+    rail — which legitimately slides up past the end of its container at the
+    bottom of the page — read straight through it as clipped, floating labels.
+  */
+  .header-glass {
+    background: color-mix(in srgb, var(--void) 93%, transparent);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-color: var(--glass-line);
   }
 
   /* Signature notched corner — the house shape of the whole UI. */
