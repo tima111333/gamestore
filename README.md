@@ -183,6 +183,29 @@ Verified by driving headless Chrome: a Tab walk across routes (focus ring presen
 
 ---
 
+## Deploying
+
+This app needs a Node runtime. Server components fetch the catalogue, `/api/games`
+is a route handler, pages revalidate hourly, and `next/image` optimises artwork on
+request — a static file host cannot serve any of that. **GitHub Pages will not
+work**: with no static site in the repository it falls back to Jekyll and renders
+this README instead.
+
+Vercel runs it zero-config:
+
+1. <https://vercel.com/new> → sign in with GitHub → import this repository.
+2. Leave every build setting untouched — the framework preset is detected.
+3. Optional: add `RAWG_API_KEY` under **Environment Variables**. Without it the
+   Steam provider takes over, exactly as it does locally.
+4. Deploy.
+
+Notes for a hosted deployment:
+
+- The build calls Steam roughly 40 times to prerender game pages. If those calls
+  are throttled or blocked from the build region, the breaker trips and the
+  offline catalogue is used — the build still succeeds.
+- Pin a provider with `VOLTA_DATA_SOURCE` if you want deterministic content.
+
 ## Scripts
 
 | Command | Purpose |
