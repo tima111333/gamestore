@@ -127,6 +127,15 @@
     text-transform: uppercase;
   }
 
+  /* Browsers default <button> to an arrow; on the web a hand reads as the
+     clickable affordance, and the site uses the system cursor throughout. */
+  button:not(:disabled),
+  [role='button'],
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+
   ::selection {
     background: var(--acid);
     color: var(--on-accent);
@@ -365,61 +374,6 @@
 
 @utility shadow-glow {
   box-shadow: var(--shadow-glow);
-}
-
-/*
-  Custom cursor. Both layers are fixed at the origin and moved with transforms
-  only; the native cursor is hidden only once the component confirms a fine
-  pointer, so touch and keyboard users keep the real one.
-*/
-.cursor-dot,
-.cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 90;
-  pointer-events: none;
-  opacity: 0;
-  will-change: transform;
-}
-
-.cursor-dot {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
-  background: var(--acid);
-  transition: opacity 200ms linear;
-}
-
-.cursor-ring {
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
-  border: 1px solid var(--acid);
-  transition:
-    opacity 200ms linear,
-    width 260ms var(--ease-out-expo),
-    height 260ms var(--ease-out-expo),
-    margin 260ms var(--ease-out-expo),
-    background-color 260ms var(--ease-out-expo);
-}
-
-.cursor-ring[data-active='true'] {
-  width: 56px;
-  height: 56px;
-  margin: -28px 0 0 -28px;
-  background: color-mix(in srgb, var(--acid) 12%, transparent);
-}
-
-.cursor-ring[data-pressed='true'] {
-  width: 26px;
-  height: 26px;
-  margin: -13px 0 0 -13px;
-}
-
-html.has-custom-cursor,
-html.has-custom-cursor * {
-  cursor: none !important;
 }
 
 /* Film grain + CRT scanlines, painted once at the document level. */

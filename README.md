@@ -93,7 +93,7 @@ src/
 ├── app/                  routes, loading.tsx / error.tsx per segment, api/games route handler
 ├── components/
 │   ├── ui/               Button, MagneticButton, Skeleton, Tag, Rating, PriceTag, Section
-│   ├── layout/           Header, Footer, ScrollProgress, ThemeToggle, CartBadge, CustomCursor
+│   ├── layout/           Header, Footer, ScrollProgress, ThemeToggle, CartBadge, Wordmark
 │   ├── motion/           SmoothScroll, PageTransition, Reveal, Enter, SplitText, ParallaxLayer,
 │   │                     ParallaxController, AnimatedNumber, CartFlight, MotionProvider
 │   ├── game/             GameCard, TiltCard, HoverTrailer, Gallery, SystemRequirements, …
@@ -123,14 +123,14 @@ src/
 | Below-the-fold reveals | IntersectionObserver (`Reveal`) | — |
 | Card tilt + cursor glow | Framer springs on `rotateX/rotateY` | fine pointer, reduced motion |
 | Hover trailer | 400 ms intent delay, buffer released on leave | fine pointer, reduced motion |
-| Magnetic buttons, custom cursor | rAF, direct DOM writes | fine pointer, reduced motion |
+| Magnetic buttons | Framer springs, pointer-driven | fine pointer, reduced motion |
 | Fly-to-cart, animated counters | Framer | reduced motion |
 | Parallax | Framer scroll (`/`), GSAP ScrollTrigger (`/genres`) | ≥768 px, reduced motion |
 | 3D accent | react-three-fiber point sphere | ≥1024 px, fine pointer, WebGL, reduced motion |
 
 Only `transform` and `opacity` are animated. Scroll handlers are passive and coalesced into a single `requestAnimationFrame`; every effect cleans up after itself. `prefers-reduced-motion` is honoured globally through `MotionConfig reducedMotion="user"` plus a CSS reset that also neutralises animation delays.
 
-Mobile gets simplified motion: no custom cursor, no tilt, no hover trailers, no background video — the poster frame stands in.
+The pointer stays the system cursor — no custom replacement. Mobile gets simplified motion: no tilt, no hover trailers, no background video — the poster frame stands in.
 
 ---
 

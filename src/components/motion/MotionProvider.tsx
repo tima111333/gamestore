@@ -4,7 +4,6 @@ import { LazyMotion, MotionConfig, domAnimation } from 'framer-motion'
 import type { ReactNode } from 'react'
 import { SmoothScroll } from '@/components/motion/SmoothScroll'
 import { CartFlight } from '@/components/motion/CartFlight'
-import { CustomCursor } from '@/components/layout/CustomCursor'
 
 /**
  * One motion root for the app.
@@ -24,7 +23,6 @@ export function MotionProvider({ children }: { children: ReactNode }) {
         <SmoothScroll />
         {children}
         <CartFlight />
-        <CustomCursor />
       </MotionConfig>
     </LazyMotion>
   )
